@@ -73,9 +73,9 @@ class TarefaController extends Controller
      * @param  \App\Models\Tarefa  $Tarefa
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tarefa $Tarefa)
+    public function edit(Tarefa $tarefa)
     {
-        //
+    return view('tarefa.edit',['tarefa'=> $tarefa] );
     }
 
     /**
@@ -85,9 +85,10 @@ class TarefaController extends Controller
      * @param  \App\Models\Tarefa  $Tarefa
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tarefa $Tarefa)
+    public function update(Request $request, Tarefa $tarefa)
     {
-        //
+        $tarefa->update($request->all());
+        return redirect()->route('tarefa.show', ['tarefa'=>$tarefa->id]);
     }
 
     /**
