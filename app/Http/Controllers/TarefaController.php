@@ -21,17 +21,10 @@ class TarefaController extends Controller
      */
     public function index()
     {
+        $user_id = auth()->user()->id;
 
-        if (auth()->check()) {
-
-            $id = auth()->user()->id;
-            $name = auth()->user()->name;
-            $email = auth()->user()->email;
-
-            return "ID: $id | Nome: $name | email: $email";
-        } else {
-            return 'Você não está logado no sistema';
-        }
+        $tarefas = Tarefa::where('user_id', $user_id)->get();
+        return view('tarefa.index', ['tarefas'=> $tarefas]);
     }
 
     /**
