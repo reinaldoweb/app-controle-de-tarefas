@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class TarefaController extends Controller
 {
- public function __construct()
- {
-       // $this->middleware('auth');
- }
+    public function __construct()
+    {
+        // $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -22,15 +22,14 @@ class TarefaController extends Controller
     public function index()
     {
 
-        if(auth()->check()){
+        if (auth()->check()) {
 
             $id = auth()->user()->id;
             $name = auth()->user()->name;
             $email = auth()->user()->email;
 
             return "ID: $id | Nome: $name | email: $email";
-
-        }else{
+        } else {
             return 'Você não está logado no sistema';
         }
     }
@@ -43,7 +42,6 @@ class TarefaController extends Controller
     public function create()
     {
         return view('tarefa.create');
-
     }
 
     /**
@@ -54,11 +52,15 @@ class TarefaController extends Controller
      */
     public function store(Request $request)
     {
-      $tarefa =  Tarefa::create($request->all());
-      $destinatario = Auth()->user()->email;//Email do usuario autenticado
-      Mail::to($destinatario)->send(new NovaTarefaMail($tarefa));
+        $dados = $request->all('tarefa', 'data_limite_conclusao');
+        $dados['user_id'] = auth()->user()->id;
 
-      return redirect()->route('tarefa.show', ['tarefa' => $tarefa->id]);
+        $tarefa = Tarefa::create($dados);
+
+        $destinatario = Auth()->user()->email; //Email do usuario autenticado
+        Mail::to($destinatario)->send(new NovaTarefaMail($tarefa));
+
+        return redirect()->route('tarefa.show', ['tarefa' => $tarefa->id]);
     }
 
     /**
@@ -69,7 +71,7 @@ class TarefaController extends Controller
      */
     public function show(Tarefa $tarefa)
     {
-        return view('tarefa.show', ['tarefa'=> $tarefa]);
+        return view('tarefa.show', ['tarefa' => $tarefa]);
     }
 
     /**
