@@ -107,8 +107,14 @@ class TarefaController extends Controller
      * @param  \App\Models\Tarefa  $Tarefa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tarefa $Tarefa)
+    public function destroy(Tarefa $tarefa)
     {
-        //
-    }
+        if (!$tarefa->user_id == auth()->user()->id) {
+            return view('acesso-negado');
+        }
+
+        $tarefa->delete();
+        return redirect()->route('tarefa.index');
+
+        }
 }
