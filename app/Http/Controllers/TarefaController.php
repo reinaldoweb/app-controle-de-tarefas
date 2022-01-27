@@ -7,12 +7,15 @@ use App\Mail\NovaTarefaMail;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TarefasExport;
+
 
 class TarefaController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth');
+         $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -117,4 +120,13 @@ class TarefaController extends Controller
         return redirect()->route('tarefa.index');
 
         }
+
+        public function exportacao()
+        {
+            return Excel::download(new TarefasExport, 'lista_de_tarefas.xlsx');
+        }
+
+
+
 }
+
