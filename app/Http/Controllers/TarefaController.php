@@ -15,7 +15,7 @@ class TarefaController extends Controller
 {
     public function __construct()
     {
-         $this->middleware('auth');
+        $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -118,15 +118,19 @@ class TarefaController extends Controller
 
         $tarefa->delete();
         return redirect()->route('tarefa.index');
+    }
 
+    public function exportacao($extensao)
+    {
+            $nome_arquivo = 'lista_de_tarefas';
+
+        if ($extensao == 'xlsx') {
+            $nome_arquivo .= '.'.$extensao;
+        } else if ($extensao == 'csv') {
+            $nome_arquivo .= '.'.$extensao;
+        } else {
+            return redirect()->route('tarefa.index');
         }
-
-        public function exportacao()
-        {
-            return Excel::download(new TarefasExport, 'lista_de_tarefas.xlsx');
-        }
-
-
-
+        return Excel::download(new TarefasExport, $nome_arquivo);
+    }
 }
-
