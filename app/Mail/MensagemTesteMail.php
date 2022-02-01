@@ -28,6 +28,6 @@ class MensagemTesteMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.mensagens-teste');
+        return $this->markdown('emails.mensagem-teste');
     }
 }

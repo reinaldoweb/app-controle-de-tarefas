@@ -6,15 +6,12 @@ use Mail;
 use App\Mail\NovaTarefaMail;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TarefasExport;
 
-
 class TarefaController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
     }
     /**
@@ -25,7 +22,6 @@ class TarefaController extends Controller
     public function index()
     {
         $user_id = auth()->user()->id;
-
         $tarefas = Tarefa::where('user_id', $user_id)->paginate(10);
         return view('tarefa.index', ['tarefas' => $tarefas]);
     }
@@ -50,11 +46,11 @@ class TarefaController extends Controller
     {
         $dados = $request->all('tarefa', 'data_limite_conclusao');
         $dados['user_id'] = auth()->user()->id;
-
+        
         $tarefa = Tarefa::create($dados);
 
-        $destinatario = Auth()->user()->email; //Email do usuario autenticado
-        Mail::to($destinatario)->send(new NovaTarefaMail($tarefa));
+        $destinario = auth()->user()->email; //e-mail do usuário logado (autenticado)
+        Mail::to($destinario)->send(new NovaTarefaMail($tarefa));
 
         return redirect()->route('tarefa.show', ['tarefa' => $tarefa->id]);
     }
@@ -62,7 +58,7 @@ class TarefaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tarefa  $Tarefa
+     * @param  \App\Models\Tarefa  $tarefa
      * @return \Illuminate\Http\Response
      */
     public function show(Tarefa $tarefa)
@@ -73,16 +69,17 @@ class TarefaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tarefa  $Tarefa
+     * @param  \App\Models\Tarefa  $tarefa
      * @return \Illuminate\Http\Response
      */
     public function edit(Tarefa $tarefa)
     {
         $user_id = auth()->user()->id;
-        if ($tarefa->user_id == $user_id) {
 
+        if($tarefa->user_id == $user_id) {
             return view('tarefa.edit', ['tarefa' => $tarefa]);
         }
+
         return view('acesso-negado');
     }
 
@@ -90,13 +87,12 @@ class TarefaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tarefa  $Tarefa
+     * @param  \App\Models\Tarefa  $tarefa
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Tarefa $tarefa)
     {
-
-        if (!$tarefa->user_id == auth()->user()->id) {
+        if(!$tarefa->user_id == auth()->user()->id) {
             return view('acesso-negado');
         }
 
@@ -107,30 +103,24 @@ class TarefaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tarefa  $Tarefa
+     * @param  \App\Models\Tarefa  $tarefa
      * @return \Illuminate\Http\Response
      */
     public function destroy(Tarefa $tarefa)
     {
-        if (!$tarefa->user_id == auth()->user()->id) {
+        if(!$tarefa->user_id == auth()->user()->id) {
             return view('acesso-negado');
         }
-
         $tarefa->delete();
         return redirect()->route('tarefa.index');
     }
 
-    public function exportacao($extensao)
-    {
-            $nome_arquivo = 'lista_de_tarefas';
+    public function exportacao($extensao) {
 
-        if ($extensao == 'xlsx') {
-            $nome_arquivo .= '.'.$extensao;
-        } else if ($extensao == 'csv') {
-            $nome_arquivo .= '.'.$extensao;
-        } else {
-            return redirect()->route('tarefa.index');
+        if(in_array($extensao, ['xlsx', 'csv', 'pdf'])) {
+            return Excel::download(new TarefasExport, 'lista_de_tarefas.'.$extensao);
         }
-        return Excel::download(new TarefasExport, $nome_arquivo);
+        
+        return redirect()->route('tarefa.index');
     }
 }

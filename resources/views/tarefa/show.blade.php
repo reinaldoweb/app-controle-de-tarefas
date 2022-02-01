@@ -9,13 +9,13 @@
 
                 <div class="card-body">
                     <fieldset disabled>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label class="form-label">Data limite conclusão</label>
                             <input type="date" class="form-control" value="{{ $tarefa->data_limite_conclusao }}">
                         </div>
                     </fieldset>
+                    <a href="{{ url()->previous() }}" class="btn btn-primary">Voltar</a>
                 </div>
-                <a href="{{ url()->previous() }}" class="btn btn-primary">Voltar</a>
             </div>
         </div>
     </div>

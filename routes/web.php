@@ -1,7 +1,7 @@
 <?php
 
-use App\Mail\MensagemTesteMail;
 use Illuminate\Support\Facades\Route;
+use App\Mail\MensagemTesteMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,17 +20,20 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')
-// ->middleware('verified');
+/*
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home')
+    ->middleware('verified');
+*/
 
-Route::get('tarefa/exportacao/{extensao}', 'App\Http\Controllers\TarefaController@exportacao')->name('tarefa.exportacao');
-
+Route::get('tarefa/exportacao/{extensao}', 'App\Http\Controllers\TarefaController@exportacao')
+    ->name('tarefa.exportacao');
+    
 Route::resource('tarefa', 'App\Http\Controllers\TarefaController')
-->middleware('verified');
+    ->middleware('verified');
 
-Route::get('/mensagem-teste', function(){
-   return new MensagemTesteMail();
-   //Mail::to('reinaldoweb@hotmail.com')->send(new MensagemTesteMail());
-    //return 'E-mail enviado com sucesso';
+Route::get('/mensagem-teste', function() {
+    return new MensagemTesteMail();
+    //Mail::to('atendimento@jorgesantana.net.br')->send(new MensagemTesteMail());
+    //return 'E-mail enviado com sucesso!';
 });
-

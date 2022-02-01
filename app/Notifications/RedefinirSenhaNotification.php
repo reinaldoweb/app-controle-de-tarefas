@@ -13,12 +13,10 @@ class RedefinirSenhaNotification extends Notification
     public $token;
     public $email;
     public $name;
-
     /**
      * Create a new notification instance.
      *
      * @return void
-     *
      */
     public function __construct($token, $email, $name)
     {
@@ -26,6 +24,7 @@ class RedefinirSenhaNotification extends Notification
         $this->email = $email;
         $this->name = $name;
     }
+
     /**
      * Get the notification's delivery channels.
      *
@@ -45,18 +44,19 @@ class RedefinirSenhaNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $url= 'http://localhost:8000/password/reset/'.$this->token.'?email='.$this->email;
-        $minutos =  config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
-        $saudacao = 'Olá, '.$this->name;
+        $url = 'http://localhost:8000/password/reset/'.$this->token.'?email='.$this->email;
+        $minutos = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
+        $saudacao = 'Olá '.$this->name;
+        
         return (new MailMessage)
             ->subject('Atualização de senha')
             ->greeting($saudacao)
-            ->line('Esqueceu a senha? sem problemas vamos resolver isso!!.')
+            ->line('Esqueceu a senha? Sem problemas, vamos resolver isso!!!')
             ->action('Clique aqui para modificar a senha', $url)
-            ->line('O link acima expira em '.$minutos.'minutos')
-            ->line('Caso você não tenha solicitado a alteração de senha, então não precisa tomar ação nenhuma')
+            ->line('O link acima expira em '.$minutos.' minutos')
+            ->line('Caso você não tenha requisitado a alteração de senha, então nenhuma ação é necessária.')
             ->salutation('Até breve!');
-    }
+        }
 
     /**
      * Get the array representation of the notification.

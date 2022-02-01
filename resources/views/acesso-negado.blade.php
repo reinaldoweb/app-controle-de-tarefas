@@ -8,7 +8,7 @@
                 <div class="card-header">Acesso negado</div>
 
                 <div class="card-body">
-                   Desculpe. Você não tem acesso a esse recurso.
+                    Desculpe. Você não tem acesso a esse recurso.
                 </div>
             </div>
         </div>

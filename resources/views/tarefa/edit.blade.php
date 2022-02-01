@@ -8,20 +8,19 @@
                 <div class="card-header">Atualizar tarefa</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('tarefa.update', ['tarefa'=> $tarefa->id]) }}">
+                    <form method="post" action="{{ route('tarefa.update', ['tarefa' => $tarefa->id]) }}">
                         @csrf
                         @method('PUT')
-                        <div class="form-group">
-                          <label class="form-label">Tarefa</label>
-                          <input type="text" class="form-control" name="tarefa" value="{{ $tarefa->tarefa }}">
+                        <div class="mb-3">
+                            <label class="form-label">Tarefa</label>
+                            <input type="text" class="form-control" name="tarefa" value="{{$tarefa->tarefa}}">
                         </div>
-                        <div class="form-group">
-                          <label class="form-label">Data limite conclusão</label>
-                          <input type="date" class="form-control" name="data_limite_conclusao" value="{{ $tarefa->data_limite_conclusao }}">
+                        <div class="mb-3">
+                            <label class="form-label">Data limite conclusão</label>
+                            <input type="date" class="form-control" name="data_limite_conclusao" value="{{$tarefa->data_limite_conclusao}}">
                         </div>
-
                         <button type="submit" class="btn btn-primary">Atualizar</button>
-                      </form>
+                    </form>
                 </div>
             </div>
         </div>
