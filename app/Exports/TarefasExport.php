@@ -17,20 +17,19 @@ class TarefasExport implements FromCollection, WithHeadings, WithMapping
         return auth()->user()->tarefas()->get();
     }
 
-    public function headings():array{
+    public function headings():array { //declarando o tipo de retorno
         return [
-            'ID da Tarefa',
-            'Tarefa',
-            'Data limite conclusão',
-
-        ];
+            'ID da Tarefa', 
+            'Tarefa', 
+            'Data limite conclusão'
+        ];			
     }
 
-    public function map($linha):array{
-        return [
-                $linha->id,
-                $linha->tarefa,
-                date('d/m/y',strtotime($linha->data_limite_conclusao))
+    public function map($linha):array {
+        return [ 
+            $linha->id,
+            $linha->tarefa,
+            date('d/m/Y', strtotime($linha->data_limite_conclusao))
         ];
     }
 }

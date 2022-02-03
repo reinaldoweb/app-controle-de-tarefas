@@ -8,10 +8,12 @@ use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TarefasExport;
+use PDF;
 
 class TarefaController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
     /**
@@ -46,7 +48,7 @@ class TarefaController extends Controller
     {
         $dados = $request->all('tarefa', 'data_limite_conclusao');
         $dados['user_id'] = auth()->user()->id;
-        
+
         $tarefa = Tarefa::create($dados);
 
         $destinario = auth()->user()->email; //e-mail do usuário logado (autenticado)
@@ -76,7 +78,7 @@ class TarefaController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        if($tarefa->user_id == $user_id) {
+        if ($tarefa->user_id == $user_id) {
             return view('tarefa.edit', ['tarefa' => $tarefa]);
         }
 
@@ -92,7 +94,7 @@ class TarefaController extends Controller
      */
     public function update(Request $request, Tarefa $tarefa)
     {
-        if(!$tarefa->user_id == auth()->user()->id) {
+        if (!$tarefa->user_id == auth()->user()->id) {
             return view('acesso-negado');
         }
 
@@ -108,19 +110,28 @@ class TarefaController extends Controller
      */
     public function destroy(Tarefa $tarefa)
     {
-        if(!$tarefa->user_id == auth()->user()->id) {
+        if (!$tarefa->user_id == auth()->user()->id) {
             return view('acesso-negado');
         }
         $tarefa->delete();
         return redirect()->route('tarefa.index');
     }
 
-    public function exportacao($extensao) {
+    public function exportacao($extensao)
+    {
 
-        if(in_array($extensao, ['xlsx', 'csv', 'pdf'])) {
-            return Excel::download(new TarefasExport, 'lista_de_tarefas.'.$extensao);
+        if (in_array($extensao, ['xlsx', 'csv', 'pdf'])) {
+            return Excel::download(new TarefasExport, 'lista_de_tarefas.' . $extensao);
         }
-        
+
         return redirect()->route('tarefa.index');
+    }
+
+    public function exportar()
+    {
+        $tarefas = auth()->user()->tarefas()->get();
+
+        $pdf = PDF::loadView('tarefa.pdf', ['tarefas'=> $tarefas]);
+        return $pdf->download('lista_de_tarefas.pdf');
     }
 }
