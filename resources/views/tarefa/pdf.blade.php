@@ -17,7 +17,7 @@
             width: 100%;
             text-transform: uppercase;
             font-weight: bold;
-            margin-bottom: 25px;
+            padding: 25px;
         }
 
         .tabela {
